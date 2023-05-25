@@ -40,4 +40,8 @@ public class Product {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public String toString() {
+        return String.format("%s $%.2f Qty Available: %d", this.name, this.price, this.stock);
+    }
 }

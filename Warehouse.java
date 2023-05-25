@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -15,36 +16,45 @@ public class Warehouse {
 
     public void itemManagementList() {
         System.out.println("""
-                
+                                
                 ===Manage Items===
                 1 - Add Item
                 2 - Remove Item
-                3 - Update Item
-                4 - Delete Item""");
+                3 - Update Item""");
 
         switch (scanner.nextLine()) {
             case "1" -> addProduct();
             case "2" -> removeProduct();
-//            case "3" ->
-//            case "4" ->
+            case "3" -> updateProduct();
         }
     }
 
+    /**
+     * Method for adding products, asks for name, price and stock of the item before adding it to the list
+     * <p>
+     * If item doesn't exist on the list, it will be added as normal and then the user need to decide if it's still
+     * to add more items
+     * <p>
+     * If the item exists on the list it won't be added, and it returns the user back to the menu
+     */
     public void addProduct() {
         boolean userWantToExit = false;
-        DecimalFormat df = new DecimalFormat("0.00");
 
         while (!userWantToExit) {
             System.out.println("\nEnter the name of the product:");
-            String nameProduct = scanner.nextLine();
+            String nameProduct = scanner.nextLine().trim().toLowerCase();
             System.out.println("Enter the price of the product:");
             double priceProduct = Double.parseDouble(scanner.nextLine());
             System.out.println("What is the stock for the item?");
             int stockProduct = Integer.parseInt(scanner.nextLine());
 
+            if (isItemOnTheList(nameProduct)) {
+                System.out.println("\nSorry, item exists on the list, going back to the menu...");
+                break;
+            }
+
             this.productInventory.add(new Product(nameProduct, priceProduct, stockProduct));
             System.out.printf("\nThe product %s has been added with the price of %.2f and stock %d.\n", nameProduct, priceProduct, stockProduct);
-
 
             boolean userWantToAddItem = false;
             while (!userWantToAddItem) {
@@ -60,17 +70,22 @@ public class Warehouse {
                     default -> System.out.println("\nPlease put (Y/N)");
                 }
             }
-
         }
 
+    }
+
+    public boolean isItemOnTheList(String nameProduct) {
+        for (Product x : this.productInventory) {
+            if (x.getName().equals(nameProduct)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addProduct(Product product) {
         this.productInventory.add(product);
     }
-
-    //Want to remove the product by giving the name, then its going to give me the ID so I can confirm to remove the item
-    //by putting the ID !!!! -- This is to complex. maybe in the future
 
     public void removeProduct() {
         System.out.println("Give the ID number of the item");
@@ -85,7 +100,88 @@ public class Warehouse {
         }
     }
 
+    public void updateProduct() {
+        System.out.println("Input the name of the item you want to update: ");
+        String itemName = scanner.nextLine();
+
+        int index = 0;
+        for (Product x : this.productInventory) {
+            if (x.getName().equals(itemName)) {
+                this.productInventory.set(index, updateProductInfo());
+            }
+            index++;
+        }
+    }
+
+    public Product updateProductInfo() {
+        System.out.println("\nEnter the name of the product:");
+        String nameProduct = scanner.nextLine().trim().toLowerCase();
+        System.out.println("Enter the price of the product:");
+        double priceProduct = Double.parseDouble(scanner.nextLine());
+        System.out.println("What is the stock for the item?");
+        int stockProduct = Integer.parseInt(scanner.nextLine());
+
+        return new Product(nameProduct, priceProduct, stockProduct);
+    }
+
     public int getSize() {
         return this.productInventory.size();
+    }
+
+
+    /**
+     * The export file saves the value into a file in the following format:
+     * Item:Price:StockQty
+     */
+    public void exportItems() throws IOException {
+        FileWriter fw = new FileWriter("list.txt");
+        fw.write(csvValues());
+        fw.close();
+    }
+
+    public String csvValues() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Product x : this.productInventory) {
+            sb.append(x.getName()).append(":").append(x.getPrice()).append(":").append(x.getStock()).append("\n");
+        }
+
+        //Removing last newline from the StringBuilder
+        sb.deleteCharAt(sb.length() - 1);
+
+        return sb.toString();
+    }
+
+    public void importFile() throws IOException {
+        String line = "";
+        BufferedReader reader = null;
+
+        try {
+            reader = new BufferedReader(new FileReader("list.txt"));
+
+            while ((line = reader.readLine()) != null) {
+                String[] splitterInfo = line.split(":");
+
+                String itemName = splitterInfo[0];
+                double itemPrice = Double.parseDouble(splitterInfo[1]);
+                int itemQuantity = Integer.parseInt(splitterInfo[2]);
+
+                addProduct(new Product(itemName, itemPrice, itemQuantity));
+                reader.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        this.productInventory.forEach(item -> sb.append(item).append("\n"));
+
+        //Removing last newline from the StringBuilder
+        sb.deleteCharAt(sb.length() - 1);
+
+        return sb.toString();
     }
 }

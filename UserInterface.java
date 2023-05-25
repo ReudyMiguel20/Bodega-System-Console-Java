@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -11,7 +12,7 @@ public class UserInterface {
         this.scanner = new Scanner(System.in);
     }
 
-    public void start() {
+    public void start() throws IOException {
         boolean userWantToExit = false;
 
         System.out.println("Welcome to the Bodega System v0.1");
@@ -24,19 +25,25 @@ public class UserInterface {
                 case "2" -> {
 
                 }
+                case "6" -> {
+                    this.warehouse.importFile();
+                }
+                case "7" -> {
+                    this.warehouse.exportItems();
+                }
             }
         }
     }
 
     public static void commandList() {
         System.out.println("""
-                
+                                
                 ===Command List===
                 1 - Manage Items
-                2 - Inventory Management""");
+                2 - Inventory Management
+                6 - Import Items
+                7 - Export Items""");
     }
-
-
 
 }
 
