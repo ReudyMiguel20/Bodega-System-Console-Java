@@ -26,7 +26,7 @@ public class UserInterface {
 
                 }
                 case "6" -> {
-
+                    this.warehouse.importFile();
                 }
                 case "7" -> {
                     this.warehouse.exportItems();
@@ -37,15 +37,13 @@ public class UserInterface {
 
     public static void commandList() {
         System.out.println("""
-                
+                                
                 ===Command List===
                 1 - Manage Items
                 2 - Inventory Management
                 6 - Import Items
                 7 - Export Items""");
     }
-
-
 
 }
 

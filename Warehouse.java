@@ -1,7 +1,6 @@
 package org.example;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -132,7 +131,7 @@ public class Warehouse {
 
     /**
      * The export file saves the value into a file in the following format:
-     *  Item:Price:StockQty
+     * Item:Price:StockQty
      */
     public void exportItems() throws IOException {
         FileWriter fw = new FileWriter("list.txt");
@@ -151,6 +150,28 @@ public class Warehouse {
         sb.deleteCharAt(sb.length() - 1);
 
         return sb.toString();
+    }
+
+    public void importFile() throws IOException {
+        String line = "";
+        BufferedReader reader = null;
+
+        try {
+            reader = new BufferedReader(new FileReader("list.txt"));
+
+            while ((line = reader.readLine()) != null) {
+                String[] splitterInfo = line.split(":");
+
+                String itemName = splitterInfo[0];
+                double itemPrice = Double.parseDouble(splitterInfo[1]);
+                int itemQuantity = Integer.parseInt(splitterInfo[2]);
+
+                addProduct(new Product(itemName, itemPrice, itemQuantity));
+                reader.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String toString() {
