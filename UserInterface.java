@@ -6,9 +6,11 @@ import java.util.Scanner;
 public class UserInterface {
     private Scanner scanner;
     private Warehouse warehouse;
+    private BodegaCheckout bodegaCheckout;
 
     public UserInterface(Warehouse warehouse) {
         this.warehouse = warehouse;
+        this.bodegaCheckout = new BodegaCheckout(this.warehouse);
         this.scanner = new Scanner(System.in);
     }
 
@@ -23,7 +25,7 @@ public class UserInterface {
                     this.warehouse.itemManagementList();
                 }
                 case "2" -> {
-
+                    this.bodegaCheckout.sellItems();
                 }
                 case "6" -> {
                     this.warehouse.importFile();
@@ -39,8 +41,8 @@ public class UserInterface {
         System.out.println("""
                                 
                 ===Command List===
-                1 - Manage Items
-                2 - Inventory Management
+                1 - Inventory Management
+                2 - Sell Items (Point of Sale)
                 6 - Import Items
                 7 - Export Items""");
     }

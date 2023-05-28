@@ -20,12 +20,14 @@ public class Warehouse {
                 ===Manage Items===
                 1 - Add Item
                 2 - Remove Item
-                3 - Update Item""");
+                3 - Update Item
+                4 - Print Item List""");
 
         switch (scanner.nextLine()) {
             case "1" -> addProduct();
             case "2" -> removeProduct();
             case "3" -> updateProduct();
+            case "4" -> printItemList();
         }
     }
 
@@ -128,15 +130,33 @@ public class Warehouse {
         return this.productInventory.size();
     }
 
+    public void printItemList() {
+        StringBuilder sbList = new StringBuilder();
+
+        for (Product x : this.productInventory) {
+            sbList.append(x).append("\n");
+        }
+
+        sbList.deleteCharAt(sbList.length() - 1);
+
+        System.out.println(sbList);
+    }
+
 
     /**
      * The export file saves the value into a file in the following format:
      * Item:Price:StockQty
      */
-    public void exportItems() throws IOException {
-        FileWriter fw = new FileWriter("list.txt");
-        fw.write(csvValues());
-        fw.close();
+    public void exportItems() {
+        try {
+            FileWriter fw = new FileWriter("list.txt");
+            fw.write(csvValues());
+            fw.close();
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("There's no item on the inventory to export.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String csvValues() {
@@ -167,11 +187,22 @@ public class Warehouse {
                 int itemQuantity = Integer.parseInt(splitterInfo[2]);
 
                 addProduct(new Product(itemName, itemPrice, itemQuantity));
-                reader.close();
             }
+            reader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public Product getProductToSell(String productName) {
+        for (Product product : this.productInventory) {
+            if (product.getName().equals(productName)) {
+                return product;
+            }
+        }
+        System.out.println();
+        return null;
     }
 
     public String toString() {

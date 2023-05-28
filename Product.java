@@ -42,6 +42,6 @@ public class Product {
     }
 
     public String toString() {
-        return String.format("%s $%.2f Qty Available: %d", this.name, this.price, this.stock);
+        return String.format("Item Name: %s --- Price Each: $%.2f --- Qty Available: %d", this.name, this.price, this.stock);
     }
 }
