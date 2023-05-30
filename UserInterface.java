@@ -27,11 +27,14 @@ public class UserInterface {
                 case "2" -> {
                     this.bodegaCheckout.sellItems();
                 }
+                case "3" -> {
+
+                }
                 case "6" -> {
-                    this.warehouse.importFile();
+                    this.bodegaCheckout.importFile();
                 }
                 case "7" -> {
-                    this.warehouse.exportItems();
+                    this.bodegaCheckout.exportItems();
                 }
             }
         }
@@ -43,6 +46,7 @@ public class UserInterface {
                 ===Command List===
                 1 - Inventory Management
                 2 - Sell Items (Point of Sale)
+                3 - Statistics (Report)
                 6 - Import Items
                 7 - Export Items""");
     }
