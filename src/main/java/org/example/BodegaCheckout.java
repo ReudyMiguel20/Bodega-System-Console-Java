@@ -1,5 +1,9 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -42,7 +46,7 @@ public class BodegaCheckout {
                 System.out.printf("How many %s do you want? (Input quantity):\n", productName);
                 int productQuantity = Integer.parseInt(scanner.nextLine());
 
-                //Handling if the stock is less than zero.
+                //Handling if the stock is less than zero, if it is then returning back to the menu.
                 if (itemToSell.getStock() - productQuantity < 0) {
                     System.out.printf("\nSorry, there's not enough %s for this required amount.", productName);
                     return;
@@ -63,7 +67,6 @@ public class BodegaCheckout {
             }
 
         }
-        //Exception when loading file empty
     }
 
     /**
@@ -100,6 +103,7 @@ public class BodegaCheckout {
         return false;
     }
 
+    //Method for printing all the items on cart on checkout.
     public void checkoutItems(double cartPrice) {
         System.out.println("\n===Items on cart===");
         for (Product x : this.cart) {
@@ -113,5 +117,82 @@ public class BodegaCheckout {
         System.out.printf("\nTotal cash on the cash register: $%.2f\n", this.totalMoney);
     }
 
-    //I need to move the export/import methods from Warehouse to this class.
+    public double totalMoneyOnCashRegister() {
+        return this.totalMoney;
+    }
+
+    /**
+     * The export file saves the value into a file in the following format:
+     * Item:Price:StockQty
+     * Item:Price:StockQty
+     * totalMoneyOnCashRegister - it's the total amount of money on cash register, it's always the last value on list.
+     *
+     * If there's no items added/loaded to the system then it's impossible to export a file, which action is going
+     * to throw an exception.
+     */
+    public void exportItems() {
+        try {
+            if (this.warehouse.getSize() == 0) {
+                throw new StringIndexOutOfBoundsException();
+            }
+
+            FileWriter fw = new FileWriter("list.txt");
+            fw.write(this.warehouse.csvValues() + "\n");
+            fw.write(String.valueOf(totalMoneyOnCashRegister()));
+            fw.close();
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("There's no item on the inventory to export.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method imports all items from the list.txt file, the data should be in this format:
+     * Item:Price:StockQty
+     * Item:Price:StockQty
+     * totalMoneyOnCashRegister - it's the total amount of money on cash register, it's always the last value on list.
+     *
+     */
+    public void importFile() throws IOException {
+        String line = "";
+        BufferedReader reader = null;
+        int counterItems = 0;
+
+        try {
+            reader = new BufferedReader(new FileReader("list.txt"));
+
+            while ((line = reader.readLine()) != null) {
+                String[] splitterInfo = line.split(":");
+
+                //This is for the last number on the file, this should be the money on the cash register.
+                if (splitterInfo.length == 1) {
+                    this.totalMoney = Double.parseDouble(splitterInfo[0]);
+                    break;
+                }
+
+                String itemName = splitterInfo[0];
+                double itemPrice = Double.parseDouble(splitterInfo[1]);
+                int itemQuantity = Integer.parseInt(splitterInfo[2]);
+
+                this.warehouse.addProduct(new Product(itemName, itemPrice, itemQuantity));
+                counterItems++;
+            }
+
+            //Printing status condition if there's or there's no items on the file.
+            if (counterItems == 0) {
+                System.out.println("""
+                        
+                        Import action uncompleted:
+                        The file "list.txt" is empty.""");
+            } else {
+                System.out.printf("\nLoaded %d items to the program.\n", counterItems);
+            }
+
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

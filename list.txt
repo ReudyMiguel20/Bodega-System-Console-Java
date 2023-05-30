@@ -1,1 +1,4 @@
-doritos
+doritos:4.63:97
+chicken:6.75:23
+soda:2.96:13
+0.00

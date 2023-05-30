@@ -141,30 +141,6 @@ public class Warehouse {
         System.out.println(sbList);
     }
 
-
-    /**
-     * The export file saves the value into a file in the following format:
-     * Item:Price:StockQty
-     *
-     * If there's no items added/loaded to the system then it's impossible to export a file, which action is going
-     * to throw an exception.
-     */
-    public void exportItems() {
-        try {
-            if (this.productInventory.size() == 0) {
-                throw new StringIndexOutOfBoundsException();
-            }
-
-            FileWriter fw = new FileWriter("list.txt");
-            fw.write(csvValues());
-            fw.close();
-        } catch (StringIndexOutOfBoundsException e) {
-            System.out.println("There's no item on the inventory to export.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public String csvValues() {
         StringBuilder sb = new StringBuilder();
 
@@ -176,29 +152,6 @@ public class Warehouse {
         sb.deleteCharAt(sb.length() - 1);
 
         return sb.toString();
-    }
-
-    public void importFile() throws IOException {
-        String line = "";
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new FileReader("list.txt"));
-
-            while ((line = reader.readLine()) != null) {
-                String[] splitterInfo = line.split(":");
-
-                String itemName = splitterInfo[0];
-                double itemPrice = Double.parseDouble(splitterInfo[1]);
-                int itemQuantity = Integer.parseInt(splitterInfo[2]);
-
-                addProduct(new Product(itemName, itemPrice, itemQuantity));
-            }
-            reader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public Product getProductToSell(String productName) {
