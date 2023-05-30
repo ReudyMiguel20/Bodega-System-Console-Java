@@ -1,7 +1,6 @@
 package org.example;
 
 import java.io.*;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 

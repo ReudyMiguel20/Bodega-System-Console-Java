@@ -41,6 +41,11 @@ public class Product {
         this.stock = stock;
     }
 
+    public String productDetailsOnCart() {
+        double totalPriceItems = this.price * this.stock;
+        return String.format("Item Name: %s -*- Price Each: $%.2f -*- Quantity on Cart: %d for a total of %.2f", this.name, this.price, this.stock, totalPriceItems);
+    }
+
     public String toString() {
         return String.format("Item Name: %s --- Price Each: $%.2f --- Qty Available: %d", this.name, this.price, this.stock);
     }

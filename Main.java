@@ -16,5 +16,6 @@ public class Main {
         //Maybe going to separate all three, and I can put the export-import file on system management
 
         //Idea - The options where it sells the items can recollect info about statistics on sales, and many more
+        //Idea - Need to import/export the total money on the cash register.
     }
 }
