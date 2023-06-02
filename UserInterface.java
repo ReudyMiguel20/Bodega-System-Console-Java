@@ -17,7 +17,7 @@ public class UserInterface {
     public void start() throws IOException {
         boolean userWantToExit = false;
 
-        System.out.println("Welcome to the Bodega System v0.1");
+        System.out.println("Welcome to the Bodega System v0.2");
         while (!userWantToExit) {
             commandList();
             switch (scanner.nextLine()) {
@@ -28,13 +28,18 @@ public class UserInterface {
                     this.bodegaCheckout.sellItems();
                 }
                 case "3" -> {
-
+                    this.bodegaCheckout.printStatistics();
                 }
                 case "6" -> {
                     this.bodegaCheckout.importFile();
                 }
                 case "7" -> {
                     this.bodegaCheckout.exportItems();
+                }
+                case "0" -> {
+                    System.out.println("Closing the program and saving all stats.");
+                    this.bodegaCheckout.exportItems();
+                    userWantToExit = true;
                 }
             }
         }
@@ -48,7 +53,8 @@ public class UserInterface {
                 2 - Sell Items (Point of Sale)
                 3 - Statistics (Report)
                 6 - Import Items
-                7 - Export Items""");
+                7 - Export Items
+                0 - Save and Exit""");
     }
 
 }

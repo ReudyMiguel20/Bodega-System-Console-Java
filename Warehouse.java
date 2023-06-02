@@ -1,6 +1,5 @@
 package org.example;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -44,8 +43,10 @@ public class Warehouse {
         while (!userWantToExit) {
             System.out.println("\nEnter the name of the product:");
             String nameProduct = scanner.nextLine().trim().toLowerCase();
-            System.out.println("Enter the price of the product:");
-            double priceProduct = Double.parseDouble(scanner.nextLine());
+            System.out.println("Enter the bought price of the product:");
+            double priceBought = Double.parseDouble(scanner.nextLine());
+            System.out.println("Enter the sell price of the product:");
+            double priceSold = Double.parseDouble(scanner.nextLine());
             System.out.println("What is the stock for the item?");
             int stockProduct = Integer.parseInt(scanner.nextLine());
 
@@ -54,8 +55,13 @@ public class Warehouse {
                 break;
             }
 
-            this.productInventory.add(new Product(nameProduct, priceProduct, stockProduct));
-            System.out.printf("\nThe product %s has been added with the price of %.2f and stock %d.\n", nameProduct, priceProduct, stockProduct);
+            if (priceBought > priceSold) {
+                System.out.println("\nBought price cannot be higher than Sell price, there won't be any profit! Try again.");
+                continue;
+            }
+
+            this.productInventory.add(new Product(nameProduct, priceBought, priceSold, stockProduct));
+            System.out.printf("\nThe product %s has been added with a buy price of %.2f, a sell price of %.2f and a stock %d.\n", nameProduct, priceBought, priceSold, stockProduct);
 
             boolean userWantToAddItem = false;
             while (!userWantToAddItem) {
@@ -117,12 +123,14 @@ public class Warehouse {
     public Product updateProductInfo() {
         System.out.println("\nEnter the name of the product:");
         String nameProduct = scanner.nextLine().trim().toLowerCase();
-        System.out.println("Enter the price of the product:");
-        double priceProduct = Double.parseDouble(scanner.nextLine());
+        System.out.println("Enter the bought price for the product:");
+        double priceBought = Double.parseDouble(scanner.nextLine());
+        System.out.println("Enter the sell price of the product:");
+        double priceSold = Double.parseDouble(scanner.nextLine());
         System.out.println("What is the stock for the item?");
         int stockProduct = Integer.parseInt(scanner.nextLine());
 
-        return new Product(nameProduct, priceProduct, stockProduct);
+        return new Product(nameProduct, priceBought, priceSold, stockProduct);
     }
 
     public int getSize() {
@@ -130,7 +138,7 @@ public class Warehouse {
     }
 
     public void printItemList() {
-        StringBuilder sbList = new StringBuilder();
+        StringBuilder sbList = new StringBuilder("\n");
 
         for (Product x : this.productInventory) {
             sbList.append(x).append("\n");
@@ -138,14 +146,19 @@ public class Warehouse {
 
         sbList.deleteCharAt(sbList.length() - 1);
 
-        System.out.println(sbList);
+        if (sbList.isEmpty()) {
+            System.out.println("\nThere's no items to show, try do add some.");
+        } else {
+            System.out.println(sbList);
+        }
+
     }
 
     public String csvValues() {
         StringBuilder sb = new StringBuilder();
 
         for (Product x : this.productInventory) {
-            sb.append(x.getName()).append(":").append(x.getPrice()).append(":").append(x.getStock()).append("\n");
+            sb.append(x.getName()).append(":").append(x.getPriceBought()).append(":").append(x.getPriceSold()).append(":").append(x.getStock()).append("\n");
         }
 
         //Removing last newline from the StringBuilder
