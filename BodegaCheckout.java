@@ -60,7 +60,6 @@ public class BodegaCheckout {
                 }
 
                 itemToSell.setStock(itemToSell.getStock() - productQuantity);
-                //put getPriceSold
                 totalPriceOfItem = itemToSell.getPriceSold() * productQuantity;
 
 
@@ -71,7 +70,7 @@ public class BodegaCheckout {
                 this.totalItemsSold += productQuantity;
                 this.totalProfit += itemToSell.getPriceBought() * productQuantity;
 
-                //put getPriceSold
+
                 this.cart.add(new Product(itemToSell.getName(), itemToSell.getPriceBought(), itemToSell.getPriceSold(), productQuantity));
 
                 System.out.printf("You added %d of %s to the cart.", productQuantity, itemToSell.getName());
@@ -167,9 +166,12 @@ public class BodegaCheckout {
 
     /**
      * This method imports all items from the list.txt file, the data should be in this format:
+
      * Item:priceBought:priceSold:stockQuantity
      * Item:priceBought:priceSold:stockQuantity
+     * totalItemsSold:totalProfit
      * totalMoneyOnCashRegister - it's the total amount of money on cash register, it's always the last value on list.
+
      */
     public void importFile() throws IOException {
         String line = "";
@@ -191,7 +193,7 @@ public class BodegaCheckout {
                 2- If the length of the splitterInfo is 2: Which means that if the penultimate number which consist of two
                 digits separated by a ':' those numbers are:
                 - totalSoldItems
-                - totalProfit.
+                - totalProfit
                 */
                 if (splitterInfo.length == 1) {
                     this.totalCashSold = Double.parseDouble(splitterInfo[0]);
